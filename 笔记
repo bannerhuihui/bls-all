@@ -1,0 +1,205 @@
+docker pull nacos/nacos-server
+
+contos7 root 123456
+
+mysql root @abcd123456
+
+ssh 连接失败
+    ssh-keygen -R 192.168.37.128 
+
+java 安装：
+
+    scp jdk-8u131-linux-x64.tar.gz root@192.168.37.128:/home/huihui/java
+    cd java/
+    tar -zxvf jdk-8u131-linux-x64.tar.gz
+    vi /etc/profile
+        export JAVA_HOME=/home/huihui/java/jdk1.8.0_131
+        export CLASSPATH=.:${JAVA_HOME}/jre/lib/rt.jar:${JAVA_HOME}/lib/dt.jar:${JAVA_HOME}/lib/tools.jar
+        export PATH=$PATH:${JAVA_HOME}/bin
+    source /etc/profile
+
+maven 安装：
+
+    scp apache-maven-3.3.9-bin.tar.gz root@192.168.37.128:/home/huihui/maven
+    cd maven/
+    tar -zxvf apache-maven-3.3.9-bin.tar.gz
+    vi /etc/profile
+        export MAVEN_HOME=/home/huihui/maven/apache-maven-3.3.9
+        export PATH=$PATH:${MAVEN_HOME}/bin
+    source /etc/profile
+
+mongodb 安装：
+
+    scp mongodb-linux-x86_64-rhel70-3.6.3.tgz root@192.168.37.128:/home/huihui/mongo
+    cd /usr/
+    mkdir -m 777 mongodb
+    [root@192 usr]# cp /home/huihui/mongo/mongodb-linux-x86_64-rhel70-3.6.3.tgz /usr/mongodb/
+    [root@192 usr]# cd mongodb/
+    [root@192 mongodb]# tar -zxvf mongodb-linux-x86_64-rhel70-3.6.3.tgz
+    [root@192 mongodb]# mv mongodb-linux-x86_64-rhel70-3.6.3 mongodb-3.6.3
+    [root@192 mongodb]# cd mongodb-3.6.3/
+    [root@192 mongodb]#  vi /etc/profile
+        export PATH=/usr/mongodb/mongodb-3.6.3/bin:$PATH
+    [root@192 mongodb]# source /etc/profile
+    [root@192 mongodb-3.6.3]# touch mongodb.conf
+    [root@192 mongodb-3.6.3]# mkdir db
+    [root@192 mongodb-3.6.3]# mkdir log
+    [root@192 mongodb-3.6.3]# chmod 777 db
+    [root@192 mongodb-3.6.3]# chmod 777 log
+    [root@192 mongodb-3.6.3]# cd log/
+    [root@192 log]# touch mongodb.log
+    [root@192 log]# cd ../
+    [root@192 mongodb-3.6.3]# vi mongodb.conf
+        port=27017 #端口
+        dbpath= /usr/mongodb/mongodb-3.6.3/db #数据库存文件存放目录
+        logpath= /usr/mongodb/mongodb-3.6.3/log/mongodb.log #日志文件存放路径
+        logappend=true #使用追加的方式写日志
+        fork=true #以守护进程的方式运行，创建服务器进程
+        maxConns=100 #最大同时连接数
+        noauth=true #不启用验证
+        journal=true #每次写入会记录一条操作日志（通过journal可以重新构造出写入的数据）。
+                     #即使宕机，启动时wiredtiger会先将数据恢复到最近一次的checkpoint点，然后重放后续的journal日志来恢复。
+        storageEngine=wiredTiger  #存储引擎，有mmapv1、wiretiger、mongorocks
+        bind_ip = 0.0.0.0  #设置成全部ip可以访问，这样就可以在windows中去连虚拟机的MongoDB，也可以设置成某个网段或者某个ip
+    [root@192 mongodb-3.6.3]# mongod --config  /usr/mongodb/mongodb-3.6.3/mongodb.conf
+    [root@192 mongodb-3.6.3]# systemctl stop firewalld.service
+    [root@192 mongodb-3.6.3]# service iptables restart
+
+mysql 安装：
+
+    yum -y install mysql57-community-release-el7-10.noarch.rpm
+    已加载插件：fastestmirror
+    Determining fastest mirrors
+     * base: mirrors.bfsu.edu.cn
+     * extras: mirrors.bfsu.edu.cn
+     * updates: mirrors.aliyun.com
+    base                                                                                          | 3.6 kB  00:00:00
+    extras                                                                                        | 2.9 kB  00:00:00
+    updates                                                                                       | 2.9 kB  00:00:00
+    (1/4): base/7/x86_64/group_gz                                                                 | 153 kB  00:00:00
+    (2/4): extras/7/x86_64/primary_db                                                             | 243 kB  00:00:00
+    (3/4): updates/7/x86_64/primary_db                                                            |  13 MB  00:00:02
+    (4/4): base/7/x86_64/primary_db                                                               | 6.1 MB  00:00:04
+    没有可用软件包 mysql57-community-release-el7-10.noarch.rpm。
+    错误：无须任何处理
+
+    [root@192 /]# yum -y install mysql57-community-release-el7-10.noarch.rpm
+    已加载插件：fastestmirror
+    Loading mirror speeds from cached hostfile
+     * base: mirrors.bfsu.edu.cn
+     * extras: mirrors.bfsu.edu.cn
+     * updates: mirrors.aliyun.com
+    没有可用软件包 mysql57-community-release-el7-10.noarch.rpm。
+    错误：无须任何处理
+    [root@192 /]# yum -y install mysql-community-server
+    已加载插件：fastestmirror
+    Loading mirror speeds from cached hostfile
+     * base: mirrors.bfsu.edu.cn
+     * extras: mirrors.bfsu.edu.cn
+     * updates: mirrors.aliyun.com
+    没有可用软件包 mysql-community-server。
+    错误：无须任何处理
+
+    [root@192 /]# systemctl start  mysqld.service
+    Failed to start mysqld.service: Unit not found.
+    [root@192 /]# cd /usr/local/
+
+    [root@192 local]# mkdir -p tools
+    [root@192 local]# mkdir mysql
+    [root@192 local]# cd tools/
+    [root@192 tools]# rpm -qa | grep mysql
+    [root@192 tools]# yum list installed | grep mysql
+    [root@192 tools]# wget http://repo.mysql.com/mysql57-community-release-el7-8.noarch.rpm
+    -bash: wget: 未找到命令
+    [root@192 tools]# yum install wget
+    [root@192 tools]# wget http://repo.mysql.com/mysql57-community-release-el7-8.noarch.rpm
+    [root@192 tools]# rpm -ivh mysql57-community-release-el7-8.noarch.rpmrpm
+    错误：打开 mysql57-community-release-el7-8.noarch.rpmrpm 失败： 没有那个文件或目录
+    [root@192 tools]# rpm -ivh mysql57-community-release-el7-8.noarch.rpm
+    警告：mysql57-community-release-el7-8.noarch.rpm: 头V3 DSA/SHA1 Signature, 密钥 ID 5072e1f5: NOKEY
+    准备中...                          ################################# [100%]
+    正在升级/安装...
+       1:mysql57-community-release-el7-8  ################################# [100%]
+    [root@192 tools]# yum install mysql-server
+    mysql-community-libs-5.7.37-1.el7.x86_64.rpm 的公钥尚未安装
+
+
+     失败的软件包是：mysql-community-libs-5.7.37-1.el7.x86_64
+     GPG  密钥配置为：file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+
+    [root@192 tools]# cd /var/log/
+    [root@192 log]# rpm -qa | grep mysql
+    mysql57-community-release-el7-8.noarch
+    [root@192 log]# yum -y remove mysql57-community-release-el7-8.noarch
+    [root@192 tools]# cd /etc/yum.repos.d/
+    [root@192 yum.repos.d]# yum install mysql-server
+    源 "MySQL 5.7 Community Server" 的 GPG 密钥已安装，但是不适用于此软件包。请检查源的公钥 URL 是否配置正确。
+
+
+     失败的软件包是：mysql-community-libs-5.7.37-1.el7.x86_64
+     GPG  密钥配置为：file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+    [root@192 yum.repos.d]# wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+    [root@192 yum.repos.d]# rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+    [root@192 yum.repos.d]# yum install mysql-server
+    [root@192 yum.repos.d]# systemctl start mysqld
+    [root@192 yum.repos.d]# grep 'temporary password' /var/log/mysqld.log
+    2022-02-01T09:46:59.810611Z 1 [Note] A temporary password is generated for root@localhost: k!aQ5is25(Ue
+    [root@192 yum.repos.d]# mysql -u root -p 临时密码
+        set global validate_password_policy=LOW;
+        set global validate_password_length=6;
+        ALTER USER 'root'@'localhost' IDENTIFIED BY '123456';
+        ALTER USER 'root'@'localhost' IDENTIFIED BY '@abcd123456';
+
+    [root@192 yum.repos.d]# mysql -u root -p @abcd123456
+        use mysql;
+        update user set Host='%' where User='root';
+        flush privileges;
+
+
+redis 安装：
+
+    wget http://download.redis.io/releases/redis-4.0.6.tar.gz
+    [root@192 redis]# cd /usr/local/
+    cp /home/huihui/redis/redis-4.0.6.tar.gz /usr/local/
+    [root@192 local]# tar tar -zxvf redis-4.0.6.tar.gz
+    [root@192 local]# yum install gcc
+    [root@192 local]# cd redis-4.0.6/
+    [root@192 redis-4.0.6]# make MALLOC=libc
+    [root@192 redis-4.0.6]# cd src && make install
+    [root@192 src]# ./redis-server
+
+    后台启动
+    [root@192 redis-4.0.6]# vi redis.conf
+        #daemonize no
+         修改为
+         daemonize yes
+    [root@192 /]# cd /usr/local/redis-4.0.6/src/
+    [root@192 src]# ./redis-server /usr/local/redis-4.0.6/redis.conf
+    13293:C 01 Feb 19:10:49.401 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+    13293:C 01 Feb 19:10:49.401 # Redis version=4.0.6, bits=64, commit=00000000, modified=0, pid=13293, just started
+    13293:C 01 Feb 19:10:49.401 # Configuration loaded
+    [root@192 src]# ps -aux | grep redis
+    root      13294  0.1  0.2 141916  2020 ?        Ssl  19:10   0:00 ./redis-server 127.0.0.1:6379
+    root      13299  0.0  0.0 112824   988 pts/0    R+   19:11   0:00 grep --color=auto redis
+    [root@192 src]# kill 13294
+    [root@192 src]# ps -aux | grep redis
+
+    开机自启动
+    [root@192 src]# cd /etc/
+    [root@192 etc]# mkdir redis
+    [root@192 etc]# cp /usr/local/redis-4.0.6/redis.conf /etc/redis/6379.conf
+    [root@192 redis]# cp /usr/local/redis-4.0.6/utils/redis_init_script /etc/init.d/redisd
+    [root@192 redis]# cd /etc/init.d/
+    [root@192 init.d]# chkconfig redisd on
+    服务 redisd 不支持 chkconfig
+      # 使用vim编辑redisd文件，在第一行加入如下两行注释，保存退出
+      # chkconfig:   2345 90 10
+      # description:  Redis is a persistent key-value database
+    [root@192 init.d]# vi redisd
+    [root@192 /]# service redisd start
+    [root@192 /]# service redisd stop
+
+
+    systemctl stop firewalld.service
+
+

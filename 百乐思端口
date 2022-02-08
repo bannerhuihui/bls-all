@@ -1,0 +1,43 @@
+eureka-server  eureka服务端  端口 8810
+bls-gateway    网关          端口 8811
+bls-db-server  数据访问服务   端口 8820
+bls-sms        sms系统       端口 8821
+bls-sso        sso系统       端口 8822
+
+
+
+
+
+
+
+
+
+
+返回码
+
+jekins yuanhui hh123456
+
+# github password 123456
+Host github.com
+HostName github.com
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/github_id_rsa
+
+# git.zhycit.com password 123456
+Host git.zhycit.com
+HostName git.zhycit.com
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/id_ed25519
+
+
+
+问题：
+    网络不好，推送消息
+
+
+vmware
+    bannerhuihui@163.com
+   !kDXMmdPqt6CAMtQ
+
+   blue banner
+

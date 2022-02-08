@@ -1,0 +1,18 @@
+server:
+  port: 8810
+
+spring:
+  application:
+    name: bls-gateway
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8810/eureka
+  instance:
+    prefer-ip-address: true
+zuul:
+  routes:
+    bls-db-server:
+      path: /bls/db/**
+      serviceId: bls-db-server

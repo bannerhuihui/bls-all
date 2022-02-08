@@ -1,0 +1,43 @@
+server:
+  port: 8820
+spring:
+  application:
+    name: bls-db-server
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver  #?
+    url: jdbc:mysql://192.168.37.128:3306/huihui?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true&useSSL=false
+    username: root
+    password: '@abcd123456'
+
+  data:
+    mongodb:
+      uri: mongodb://admin:123456@192.168.37.128/test?authSource=admin&authMechanism=SCRAM-SHA-1
+  redis:
+    host: 192.168.37.128
+    port: 6379
+    database: 1
+    timeout: 1000
+    jedis:
+      pool:
+        max-active: 70
+        max-wait: -1
+        max-idle: 20
+        min-idle: 10
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8810/eureka
+  instance:
+    prefer-ip-address: true
+
+feign:
+  hystrix:
+    enabled: true
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.bls.pojo
+
